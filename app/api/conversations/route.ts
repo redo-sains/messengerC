@@ -4,6 +4,7 @@ import prisma from "@/app/libs/prismadb";
 
 export async function POST(request:Request) {
     try {
+        // return NextResponse.json({test: 'sa'})
         const currentUser = await getCurrentUser()
         const body = await request.json();
         const {
@@ -13,14 +14,16 @@ export async function POST(request:Request) {
             name
         } = body;
 
+        
         if(!currentUser?.id || !currentUser?.email){
             return new NextResponse('Unauthorized', {status: 401})
         }
-        console.log(members.length);
-        
-        if(isGroup && (!members || members.length < 2 || !name)){
+        if(isGroup && (!members || members.length < 2 || !name) ){
             return new NextResponse('Invalid data', {status: 400})
         }
+        // return NextResponse.json({test : 'test'})
+        
+        
 
         if(isGroup){
             const newConversation = await prisma.conversation.create({

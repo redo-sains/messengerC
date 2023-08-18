@@ -5,9 +5,10 @@ import useOtherUser from "@/app/hooks/useOtherUser";
 import { Transition, Dialog } from "@headlessui/react";
 import { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
-import {Fragment, useMemo, useState} from "react"
-import {IoClose, IoTrash} from 'react-icons/io5'
+import { Fragment, useMemo, useState } from "react"
+import { IoClose, IoTrash } from 'react-icons/io5'
 import ConfirmModal from "./ConfirmModal";
+import AvatarGroup from "@/app/components/AvatarGroup";
 
 interface ProfileDrawerProps {
     isOpen: boolean;
@@ -17,9 +18,9 @@ interface ProfileDrawerProps {
     }
 }
 
-const ProfileDrawer : React.FC<ProfileDrawerProps> = ({
-    data, 
-    isOpen, 
+const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
+    data,
+    isOpen,
     onClose
 }) => {
     const otherUser = useOtherUser(data);
@@ -43,9 +44,9 @@ const ProfileDrawer : React.FC<ProfileDrawerProps> = ({
 
     return (
         <>
-            <ConfirmModal 
+            <ConfirmModal
                 isOpen={confirmOpen}
-                onClose={()=> setConfirmOpen(false)}
+                onClose={() => setConfirmOpen(false)}
             />
             {/* <Modal 
                 
@@ -55,10 +56,10 @@ const ProfileDrawer : React.FC<ProfileDrawerProps> = ({
                 </div>
             </Modal> */}
             <Transition.Root show={isOpen} as={Fragment}>
-                <Dialog 
-                    as="div" 
+                <Dialog
+                    as="div"
                     className="relative z-50"
-                    onClose={()=>onClose()}
+                    onClose={() => onClose()}
 
                 >
                     <Transition.Child
@@ -114,7 +115,7 @@ const ProfileDrawer : React.FC<ProfileDrawerProps> = ({
                                     enterTo="translate-x-0"
                                     leave="transform transition ease-in-out duration-500"
                                     leaveTo="translate-x-full"
-                                > 
+                                >
                                     <Dialog.Panel
                                         className="
                                             pointer-events-auto
@@ -168,7 +169,7 @@ const ProfileDrawer : React.FC<ProfileDrawerProps> = ({
                                                             <span
                                                                 className="sr-only"
                                                             >Close Panel</span>
-                                                            <IoClose size={24}/>
+                                                            <IoClose size={24} />
                                                         </button>
                                                     </div>
                                                 </div>
@@ -188,7 +189,11 @@ const ProfileDrawer : React.FC<ProfileDrawerProps> = ({
                                                     "
                                                 >
                                                     <div className="mb-2">
-                                                        <Avatar user={otherUser}/>
+                                                        {data.isGroup ? (
+                                                            <AvatarGroup users={data.users} />
+                                                        ) : (
+                                                            <Avatar user={otherUser} />
+                                                        )}
 
                                                     </div>
                                                     <div>
@@ -214,7 +219,7 @@ const ProfileDrawer : React.FC<ProfileDrawerProps> = ({
                                                             "
                                                         >
                                                             <div
-                                                                
+
                                                                 className="
                                                                     w-10
                                                                     h-10
@@ -225,7 +230,7 @@ const ProfileDrawer : React.FC<ProfileDrawerProps> = ({
                                                                     justify-center
                                                                 "
                                                             >
-                                                                <IoTrash size={20}  />
+                                                                <IoTrash size={20} />
                                                             </div>
                                                             <div
                                                                 className="
@@ -255,63 +260,87 @@ const ProfileDrawer : React.FC<ProfileDrawerProps> = ({
                                                                 sm:px-6
                                                             "
                                                         >
+                                                            {data.isGroup && (
+                                                                <div>
+                                                                    <dt
+                                                                        className="
+                                                                            text-sm
+                                                                            font-medium
+                                                                            text-gray-500
+                                                                            sm:w-40
+                                                                            sm:flex-shrink-0
+                                                                        "
+                                                                    >
+                                                                        Emails
+                                                                    </dt>
+                                                                    <dd
+                                                                        className="
+                                                                            mt-1
+                                                                            text-sm
+                                                                            text-gray-900
+                                                                            sm:col-span-2
+                                                                        "
+                                                                    >
+                                                                        {data.users.map((user) => user.email).join(', ')}
+                                                                    </dd>
+                                                                </div>
+                                                            )}
                                                             {
-                                                                
-                                                                    !data.isGroup && (
-                                                                        <div>
-                                                                            <dt
-                                                                                className="
+                                                                !data.isGroup && (
+                                                                    <div>
+                                                                        <dt
+                                                                            className="
                                                                                     text-sm
                                                                                     font-medium
                                                                                     text-gray-500
                                                                                     sm:w-40
                                                                                     sm:flex-shrink-0
                                                                                 "
-                                                                            >
-                                                                                Email
-                                                                            </dt>
-                                                                            <dd
-                                                                                className="
+                                                                        >
+                                                                            Email
+                                                                        </dt>
+                                                                        <dd
+                                                                            className="
                                                                                     mt-1
                                                                                     text-sm
                                                                                     text-gray-900
                                                                                     sm:col-span-2
                                                                                 "
-                                                                            >
-                                                                                {otherUser.email}
-                                                                            </dd>
-                                                                        </div>
-                                                                    )}
-                                                                    {!data.isGroup && (
-                                                                        <>
-                                                                            <hr />
-                                                                            <div>
-                                                                                <dt
-                                                                                    className="
+                                                                        >
+                                                                            {otherUser.email}
+                                                                        </dd>
+                                                                    </div>
+                                                                )}
+                                                            {!data.isGroup && (
+                                                                <>
+                                                                    <hr />
+                                                                    <div>
+                                                                        <dt
+                                                                            className="
                                                                                         text-sm
                                                                                         font-medium
                                                                                         text-gray-500
                                                                                         sm:w-40
                                                                                         sm:flex-shrink-0
                                                                                     "
-                                                                                >
-                                                                                    Joined
-                                                                                </dt>
-                                                                                <dd
-                                                                                    className="
+                                                                        >
+                                                                            Joined
+                                                                        </dt>
+                                                                        <dd
+                                                                            className="
                                                                                         mt-1
                                                                                         text-sm
                                                                                         text-gray-900
                                                                                         sm:col-span-2
                                                                                     "
-                                                                                >
-                                                                                    <time dateTime={joinedDate}>
-                                                                                        {joinedDate}
-                                                                                    </time>
-                                                                                </dd>
-                                                                            </div>
-                                                                        </>
-                                                                    )}
+                                                                        >
+                                                                            <time dateTime={joinedDate}>
+                                                                                {joinedDate}
+                                                                            </time>
+                                                                        </dd>
+                                                                    </div>
+                                                                </>
+                                                            )}
                                                         </dl>
                                                     </div>
                                                 </div>
@@ -327,5 +356,5 @@ const ProfileDrawer : React.FC<ProfileDrawerProps> = ({
         </>
     );
 }
- 
+
 export default ProfileDrawer;
