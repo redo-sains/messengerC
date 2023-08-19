@@ -26,8 +26,6 @@ const ImageModal : React.FC<ImageModalProps> = ({
                     fill
                     src={src}
                 />
-
-                
             </div>
         </Modal>
     );
