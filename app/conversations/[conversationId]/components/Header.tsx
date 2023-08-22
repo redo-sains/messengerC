@@ -64,6 +64,7 @@ const Header : React.FC<HeaderProps> = ({conversation}) => {
                                 cursor-pointer
                             "
                         href="/conversations"
+                        // onClick={}
                     >
                         <HiChevronLeft size={32}/>
                     </Link>
